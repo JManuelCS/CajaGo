@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAJAGO - Presentación para Clientes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --azul: #2563eb;
+    --azul-dark: #1e3a8a;
+    --azul-light: #60a5fa;
+    --verde: #16a34a;
+    --naranja: #f59e0b;
+    --rojo: #dc2626;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-900: #0f172a;
+    --gradient: linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6);
+    --gradient-2: linear-gradient(135deg, #0f172a, #1e3a8a);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--gray-900);
+    overflow: hidden;
+    user-select: none;
+}
+
+.presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    /* Compensar barra superior (~65px) e inferior (~82px) */
+    padding: 65px 80px 82px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.slide.active {
+    display: flex;
+    opacity: 1;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide.active .anim { animation: fadeUp 0.6s ease both; }
+.slide.active .anim:nth-child(2) { animation-delay: 0.1s; }
+.slide.active .anim:nth-child(3) { animation-delay: 0.2s; }
+.slide.active .anim:nth-child(4) { animation-delay: 0.3s; }
+.slide.active .anim:nth-child(5) { animation-delay: 0.4s; }
+.slide.active .anim:nth-child(6) { animation-delay: 0.5s; }
+.slide.active .anim:nth-child(7) { animation-delay: 0.6s; }
+.slide.active .anim:nth-child(8) { animation-delay: 0.7s; }
+
+/* ===== BARRA SUPERIOR ===== */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 40px;
+    background: rgba(15,23,42,0.85);
+    backdrop-filter: blur(12px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 22px;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-icon img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(37,99,235,0.6));
+}
+
+.nav-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--gray-300);
+    font-size: 14px;
+}
+
+.progress-bar {
+    width: 200px;
+    height: 4px;
+    background: var(--gray-700);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gradient);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+/* ===== BARRA INFERIOR ===== */
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 40px;
+}
+
+.nav-btn {
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--gray-300);
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: var(--gray-700);
+}
+
+.nav-btn:hover {
+    background: var(--azul);
+    color: white;
+    border-color: var(--azul);
+    transform: scale(1.1);
+}
+
+.slide-counter {
+    color: var(--gray-300);
+    font-size: 15px;
+    font-weight: 500;
+    min-width: 70px;
+    text-align: center;
+}
+
+/* ===== SLIDE GENÉRICO ===== */
+.slide-content {
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+}
+
+/* ===== SLIDE 1: PORTADA ===== */
+.slide-cover {
+    background: radial-gradient(ellipse at center, #1e3a8a, #0f172a 70%);
+    color: white;
+}
+
+.slide-cover .slide-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide-cover .logo-big {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 4px;
+    animation: float 3s ease-in-out infinite;
+    position: relative;
+}
+
+/* Halo de luz detrás del logo */
+.slide-cover .logo-big::before {
+    content: '';
+    position: absolute;
+    inset: 10%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(96,165,250,0.35) 0%, transparent 70%);
+    animation: glow-pulse 3s ease-in-out infinite;
+    z-index: 0;
+}
+
+.slide-cover .logo-big img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    object-position: center;
+    filter: drop-shadow(0 10px 24px rgba(37,99,235,0.65))
+            drop-shadow(0 2px 8px rgba(147,197,253,0.4));
+    position: relative;
+    z-index: 1;
+    /* Elimina cualquier fondo blanco/gris de la PNG con mix-blend */
+    display: block;
+}
+
+@keyframes glow-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.15); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.slide-cover h1 {
+    font-size: 96px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(to right, #60a5fa, #3b82f6, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 10px 0;
+}
+
+.slide-cover .subtitle {
+    font-size: 22px;
+    color: var(--gray-300);
+    font-weight: 400;
+    max-width: 700px;
+    line-height: 1.6;
+}
+
+.slide-cover .tag {
+    margin-top: 30px;
+    padding: 10px 28px;
+    background: rgba(96,165,250,0.15);
+    border: 1px solid rgba(96,165,250,0.3);
+    border-radius: 30px;
+    font-size: 15px;
+    color: var(--azul-light);
+    font-weight: 500;
+}
+
+/* ===== SLIDE 2: PROBLEMA ===== */
+.slide-problem {
+    background: var(--gray-50);
+    color: var(--gray-900);
+}
+
+.slide-title {
+    font-size: 44px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.slide-subtitle {
+    font-size: 18px;
+    color: var(--gray-600);
+    margin-bottom: 40px;
+}
+
+.problem-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    text-align: left;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.problem-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-left: 5px solid var(--rojo);
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.problem-card .icon {
+    font-size: 40px;
+    flex-shrink: 0;
+}
+
+.problem-card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--gray-900);
+}
+
+.problem-card p {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+/* ===== SLIDE 3: QUÉ ES CAJAGO ===== */
+.slide-what {
+    background: var(--gradient);
+    color: white;
+}
+
+.slide-what .slide-title { color: white; }
+.slide-what .slide-subtitle { color: rgba(255,255,255,0.7); }
+
+.what-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px;
+    padding: 50px 60px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.what-card .big-icon {
+    font-size: 70px;
+    margin-bottom: 16px;
+}
+
+.what-card h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.what-card p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+}
+
+.what-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+.what-tag {
+    padding: 8px 20px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ===== SLIDE 4: CARACTERÍSTICAS ===== */
+.slide-features {
+    background: var(--gray-50);
+    color: var(--gray-900);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+}
+
+.feature-card .icon {
+    font-size: 52px;
+    margin-bottom: 14px;
+}
+
+.feature-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+}
+
+.feature-card p {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+/* ===== SLIDE 5: AGREGAR PRODUCTOS ===== */
+.slide-addproduct {
+    background: var(--gray-50);
+    color: var(--gray-900);
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+.addprod-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.addprod-steps-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.addprod-step {
+    background: white;
+    border-radius: 16px;
+    padding: 18px 22px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border-left: 4px solid var(--azul);
+}
+
+.addprod-step-num {
+    width: 36px;
+    height: 36px;
+    background: var(--azul);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.addprod-step-body h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 3px;
+}
+
+.addprod-step-body p {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+.addprod-mock {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+}
+
+.mock-header {
+    background: var(--gray-900);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mock-header span {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.mock-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.mock-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.mock-dot.red   { background: #ef4444; }
+.mock-dot.yellow{ background: #f59e0b; }
+.mock-dot.green { background: #22c55e; }
+
+.mock-body {
+    padding: 20px;
+}
+
+.mock-field {
+    margin-bottom: 14px;
+}
+
+.mock-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-600);
+    margin-bottom: 5px;
+}
+
+.mock-input {
+    background: var(--gray-50);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--gray-700);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mock-input.filled {
+    border-color: var(--azul);
+    background: #eff6ff;
+    color: var(--azul-dark);
+    font-weight: 500;
+}
+
+.mock-input.required::after {
+    content: '✱';
+    color: var(--rojo);
+    font-size: 10px;
+}
+
+.mock-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.mock-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--azul);
+    color: white;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 6px;
+}
+
+.mock-barcode-row {
+    display: flex;
+    gap: 8px;
+}
+
+.mock-barcode-btn {
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.mock-tip {
+    background: #eff6ff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--azul);
+    margin-top: -8px;
+    margin-bottom: 10px;
+}
+
+/* ===== SLIDE 6: CÓMO FUNCIONA ===== */
+.slide-how {
+    background: var(--gradient-2);
+    color: white;
+}
+
+.slide-how .slide-title { color: white; }
+.slide-how .slide-subtitle { color: rgba(255,255,255,0.7); }
+
+.steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    background: rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 28px 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+}
+
+.step-num {
+    width: 40px;
+    height: 40px;
+    background: var(--azul-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    margin: 0 auto 12px;
+    color: var(--azul-dark);
+}
+
+.step .icon { font-size: 40px; margin-bottom: 8px; }
+.step h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.step p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+.step-arrow {
+    font-size: 24px;
+    color: var(--gray-300);
+    flex-shrink: 0;
+}
+
+/* ===== SLIDE 6: EJEMPLO PRÁCTICO ===== */
+.slide-demo {
+    background: var(--gray-50);
+    color: var(--gray-900);
+}
+
+.demo-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.demo-scenario {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 36px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    border-bottom: 3px solid var(--azul);
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.demo-scenario .avatar {
+    font-size: 48px;
+    width: 70px;
+    height: 70px;
+    background: var(--gray-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.demo-scenario .info h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.demo-scenario .info p {
+    font-size: 15px;
+    color: var(--gray-600);
+}
+
+.demo-items {
+    background: white;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.demo-row {
+    display: flex;
+    align-items: center;
+    padding: 16px 36px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 16px;
+}
+
+.demo-row:last-child { border-bottom: none; }
+
+.demo-row .qty {
+    width: 40px;
+    height: 40px;
+    background: var(--azul);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.demo-row .name { flex: 1; text-align: left; font-weight: 500; }
+.demo-row .price { font-weight: 700; color: var(--gray-700); min-width: 100px; text-align: right; }
+
+.demo-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 36px;
+    background: var(--gray-50);
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.demo-total .change-tag {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--verde);
+}
+
+/* ===== SLIDE 7: DISPOSITIVOS ===== */
+.slide-devices {
+    background: white;
+    color: var(--gray-900);
+}
+
+.devices-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    margin: 40px 0;
+}
+
+.device {
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.device:hover { transform: translateY(-8px); }
+
+.device .emoji { font-size: 80px; }
+.device .label { font-size: 16px; font-weight: 600; color: var(--gray-600); margin-top: 8px; }
+
+.devices-msg {
+    background: var(--gray-50);
+    border-radius: 20px;
+    padding: 30px 40px;
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.devices-msg .icon { font-size: 40px; }
+.devices-msg p { font-size: 17px; color: var(--gray-700); text-align: left; line-height: 1.5; }
+
+/* ===== SLIDE 8: VENTAJAS ===== */
+.slide-benefits {
+    background: var(--gradient);
+    color: white;
+}
+
+.slide-benefits .slide-title { color: white; }
+.slide-benefits .slide-subtitle { color: rgba(255,255,255,0.7); }
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.benefit-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 18px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.benefit-card .icon { font-size: 36px; flex-shrink: 0; }
+.benefit-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.benefit-card p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+/* ===== SLIDE 9: CIERRE ===== */
+.slide-close {
+    background: radial-gradient(ellipse at center, #1e3a8a, #0f172a 70%);
+    color: white;
+}
+
+.slide-close .slide-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide-close .logo-big {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 16px;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+}
+
+.slide-close .logo-big::before {
+    content: '';
+    position: absolute;
+    inset: 10%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(96,165,250,0.3) 0%, transparent 70%);
+    animation: glow-pulse 3s ease-in-out infinite;
+    z-index: 0;
+}
+
+.slide-close .logo-big img {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    object-position: center;
+    filter: drop-shadow(0 8px 20px rgba(37,99,235,0.6))
+            drop-shadow(0 2px 6px rgba(147,197,253,0.35));
+    position: relative;
+    z-index: 1;
+    display: block;
+}
+
+.slide-close h2 {
+    font-size: 52px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(to right, #60a5fa, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.slide-close .tagline {
+    font-size: 20px;
+    color: var(--gray-300);
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+.slide-close .contact {
+    margin-top: 36px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.contact-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 18px 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    color: var(--gray-200);
+}
+
+.contact-card .icon { font-size: 24px; }
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 900px) {
+    .slide { padding: 80px 30px; }
+    .slide-cover h1 { font-size: 60px; }
+    .features-grid, .benefits-grid { grid-template-columns: 1fr; }
+    .steps { flex-direction: column; }
+    .step-arrow { transform: rotate(90deg); }
+    .problem-grid { grid-template-columns: 1fr; }
+    .devices-visual { flex-direction: column; gap: 30px; }
+    .slide-title { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="presentation">
+
+<!-- ===== BARRA SUPERIOR ===== -->
+<div class="top-bar">
+    <div class="brand">
+        <div class="brand-icon"><img src="img/isopologo.png" alt="CAJAGO"></div>
+        <span>CAJAGO</span>
+    </div>
+    <div class="nav-info">
+        <span id="slide-num">1 / 10</span>
+        <div class="progress-bar"><div class="progress-fill" id="progress" style="width:10%"></div></div>
+    </div>
+</div>
+
+<!-- ===== BARRA INFERIOR ===== -->
+<div class="bottom-bar">
+    <button class="nav-btn" onclick="prevSlide()" title="Anterior">‹</button>
+    <span class="slide-counter" id="counter">1 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()" title="Siguiente">›</button>
+</div>
+
+<!-- ===== SLIDE 1: PORTADA ===== -->
+<div class="slide slide-cover active" data-slide="1">
+    <div class="slide-content">
+        <div class="logo-big anim"><img src="img/isopologo.png" alt="CAJAGO logo"></div>
+        <h1 class="anim">CAJAGO</h1>
+        <p class="subtitle anim">El sistema que transforma la forma de administrar<br>y cobrar en tu tienda de abarrotes.</p>
+        <div class="tag anim">Presentación para clientes</div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 2: EL PROBLEMA ===== -->
+<div class="slide slide-problem" data-slide="2">
+    <div class="slide-content">
+        <h2 class="slide-title anim">¿Te ha pasado esto?</h2>
+        <p class="slide-subtitle anim">Problemas comunes en tiendas de abarrotes</p>
+        <div class="problem-grid">
+            <div class="problem-card anim">
+                <div class="icon">🧮</div>
+                <div>
+                    <h3>Cálculos a mano</h3>
+                    <p>Sumas los precios en una calculadora o de memoria. Es lento y se cometen errores.</p>
+                </div>
+            </div>
+            <div class="problem-card anim">
+                <div class="icon">❓</div>
+                <div>
+                    <h3>¿Cuánto queda de cada producto?</h3>
+                    <p>No sabes cuándo pedirle a tu proveedor porque no llevas un conteo real.</p>
+                </div>
+            </div>
+            <div class="problem-card anim">
+                <div class="icon">😰</div>
+                <div>
+                    <h3>Equivocaciones en el cambio</h3>
+                    <p>Con prisa se entrega mal el cambio y pierdes dinero sin darte cuenta.</p>
+                </div>
+            </div>
+            <div class="problem-card anim">
+                <div class="icon">📊</div>
+                <div>
+                    <h3>No sabes cuánto vendiste</h3>
+                    <p>Al final del día no tienes un registro exacto de tus ventas, perdidas y ganancias.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 3: ¿QUÉ ES CAJAGO? ===== -->
+<div class="slide slide-what" data-slide="3">
+    <div class="slide-content">
+        <h2 class="slide-title anim">¿Qué es CAJAGO?</h2>
+        <p class="slide-subtitle anim">La solución simple y completa para tu tienda</p>
+        <div class="what-card anim">
+            <div class="big-icon">🛒</div>
+            <h2>Un sistema de punto de venta</h2>
+            <p>CAJAGO es un programa que registra tus productos, escanea sus códigos de barras, cobra las compras de tus clientes y lleva el control de tu inventario. Todo desde un celular, tablet o computadora.</p>
+            <div class="what-tags">
+                <span class="what-tag">📱 Funciona en celular</span>
+                <span class="what-tag">📶 Sin internet</span>
+                <span class="what-tag">📷 Escanea con cámara</span>
+                <span class="what-tag">🇲🇽 En español</span>
+                <span class="what-tag">💰 Controla ganancias</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 4: CARACTERÍSTICAS ===== -->
+<div class="slide slide-features" data-slide="4">
+    <div class="slide-content">
+        <h2 class="slide-title anim">¿Qué hace CAJAGO?</h2>
+        <p class="slide-subtitle anim">Todo lo que tu tienda necesita en un solo lugar</p>
+        <div class="features-grid">
+            <div class="feature-card anim">
+                <div class="icon">🛍️</div>
+                <h3>Cobrar al cliente</h3>
+                <p>Escanea el código de barras o busca el producto por nombre. El sistema suma todo y calcula el cambio.</p>
+            </div>
+            <div class="feature-card anim">
+                <div class="icon">📦</div>
+                <h3>Control de inventario</h3>
+                <p>Registra tus productos y lleva el conteo de existencias. Te avisa cuando algo se está acabando.</p>
+            </div>
+            <div class="feature-card anim">
+                <div class="icon">📷</div>
+                <h3>Escaneo con cámara</h3>
+                <p>Usa la cámara de tu celular o tablet para leer el código de barras. No necesitas comprar un escáner.</p>
+            </div>
+            <div class="feature-card anim">
+                <div class="icon">🧾</div>
+                <h3>Recibos y ventas</h3>
+                <p>Genera un recibo por cada venta. Guarda todo el historial para que sepas cuánto vendiste cada día.</p>
+            </div>
+            <div class="feature-card anim">
+                <div class="icon">📊</div>
+                <h3>Panel de control</h3>
+                <p>Mira cuánto vendiste hoy, qué productos se acaban y cuáles son los más vendidos de tu tienda.</p>
+            </div>
+            <div class="feature-card anim">
+                <div class="icon">📶</div>
+                <h3>Sin internet</h3>
+                <p>Funciona completamente sin conexión. Los datos se guardan en tu dispositivo y no se pierden.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 5: CÓMO AGREGAR PRODUCTOS ===== -->
+<div class="slide slide-addproduct" data-slide="5">
+    <div class="slide-content" style="text-align:left;">
+        <h2 class="slide-title anim" style="text-align:center;">¿Cómo agrego mis productos?</h2>
+        <p class="slide-subtitle anim" style="text-align:center;">Registrar un producto es rápido. Solo sigue estos pasos</p>
+
+        <div class="addprod-layout">
+            <!-- Columna izquierda: pasos -->
+            <div class="addprod-steps-col">
+                <div class="addprod-step anim">
+                    <div class="addprod-step-num">1</div>
+                    <div class="addprod-step-body">
+                        <h4>Ir a la sección "Productos"</h4>
+                        <p>En el menú lateral izquierdo, presiona el ícono 📦 <strong>Productos</strong>. Ahí verás todos los artículos que tiene registrados tu tienda.</p>
+                    </div>
+                </div>
+                <div class="addprod-step anim">
+                    <div class="addprod-step-num">2</div>
+                    <div class="addprod-step-body">
+                        <h4>Presionar "+ Nuevo producto"</h4>
+                        <p>Haz clic en el botón azul <strong>＋ Nuevo producto</strong> que aparece en la esquina superior derecha.</p>
+                    </div>
+                </div>
+                <div class="addprod-step anim">
+                    <div class="addprod-step-num">3</div>
+                    <div class="addprod-step-body">
+                        <h4>Escanear o escribir el código de barras</h4>
+                        <p>Usa el botón 📷 para escanear el código de barras con la cámara, o escríbelo a mano. <strong>Si el producto no tiene código, deja el campo vacío</strong> y el sistema genera uno automáticamente.</p>
+                    </div>
+                </div>
+                <div class="addprod-step anim">
+                    <div class="addprod-step-num">4</div>
+                    <div class="addprod-step-body">
+                        <h4>Llenar el nombre, precio y existencias</h4>
+                        <p>Escribe el nombre del producto (ej: <em>Coca-Cola 600ml</em>), su precio de venta y cuántas piezas tienes en tu tienda ahorita.</p>
+                    </div>
+                </div>
+                <div class="addprod-step anim">
+                    <div class="addprod-step-num">5</div>
+                    <div class="addprod-step-body">
+                        <h4>Elegir categoría y presionar "Guardar"</h4>
+                        <p>Selecciona la categoría (Bebidas, Abarrotes, Botanas, etc.) y presiona el botón <strong>Guardar producto</strong>. ¡Listo! Ya puedes cobrarlo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: formulario simulado -->
+            <div class="addprod-mock anim">
+                <div class="mock-header">
+                    <div class="mock-dots">
+                        <div class="mock-dot red"></div>
+                        <div class="mock-dot yellow"></div>
+                        <div class="mock-dot green"></div>
+                    </div>
+                    <span>Nuevo producto</span>
+                    <span style="opacity:0.4;font-size:18px;">✕</span>
+                </div>
+                <div class="mock-body">
+                    <div class="mock-field">
+                        <div class="mock-label">Código de barras</div>
+                        <div class="mock-barcode-row">
+                            <div class="mock-input filled" style="flex:1;">7501000001</div>
+                            <div class="mock-barcode-btn">📷</div>
+                        </div>
+                        <div class="mock-tip">💡 Si no tiene código, déjalo vacío y se genera uno solo</div>
+                    </div>
+                    <div class="mock-field">
+                        <div class="mock-label">Nombre del producto *</div>
+                        <div class="mock-input filled">Coca-Cola 600ml</div>
+                    </div>
+                    <div class="mock-row">
+                        <div class="mock-field">
+                            <div class="mock-label">Categoría</div>
+                            <div class="mock-input filled">Bebidas ▾</div>
+                        </div>
+                        <div class="mock-field">
+                            <div class="mock-label">Existencias</div>
+                            <div class="mock-input filled">24</div>
+                        </div>
+                    </div>
+                    <div class="mock-row">
+                        <div class="mock-field">
+                            <div class="mock-label">Precio de venta ($) *</div>
+                            <div class="mock-input filled">18.00</div>
+                        </div>
+                        <div class="mock-field">
+                            <div class="mock-label">Costo de compra ($)</div>
+                            <div class="mock-input">13.00</div>
+                        </div>
+                    </div>
+                    <div class="mock-tip" style="margin-top:4px;">💡 El costo es opcional — sirve para calcular tu ganancia</div>
+                    <div class="mock-btn">✅ Guardar producto</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 6: CÓMO FUNCIONA ===== -->
+<div class="slide slide-how" data-slide="6">
+    <div class="slide-content">
+        <h2 class="slide-title anim">Es así de fácil usarlo</h2>
+        <p class="slide-subtitle anim">Cuatro pasos para cobrar a un cliente</p>
+        <div class="steps">
+            <div class="step anim">
+                <div class="step-num">1</div>
+                <div class="icon">🔎</div>
+                <h3>Busca el producto</h3>
+                <p>Escanea el código de barras o escribe el nombre del producto</p>
+            </div>
+            <div class="step-arrow anim">→</div>
+            <div class="step anim">
+                <div class="step-num">2</div>
+                <div class="icon">🛒</div>
+                <h3>Agrega al carrito</h3>
+                <p>El sistema arma la lista de todos los productos que lleva el cliente</p>
+            </div>
+            <div class="step-arrow anim">→</div>
+            <div class="step anim">
+                <div class="step-num">3</div>
+                <div class="icon">💵</div>
+                <h3>Ingresa el pago</h3>
+                <p>Escribe cuánto dinero te dio el cliente y CAJAGO calcula el cambio</p>
+            </div>
+            <div class="step-arrow anim">→</div>
+            <div class="step anim">
+                <div class="step-num">4</div>
+                <div class="icon">✅</div>
+                <h3>¡Cobrado!</h3>
+                <p>Presiona cobrar, entrega el cambio y el inventario se actualiza solo</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 7: EJEMPLO PRÁCTICO ===== -->
+<div class="slide slide-demo" data-slide="7">
+    <div class="slide-content">
+        <h2 class="slide-title anim">Veamos un ejemplo</h2>
+        <p class="slide-subtitle anim">Doña María llega a comprar despensa a la tienda de don Carlos</p>
+        <div class="demo-container anim">
+            <div class="demo-scenario">
+                <div class="avatar">👩</div>
+                <div class="info">
+                    <h3>Doña María</h3>
+                    <p>Lleva 4 productos distintos y paga con $200</p>
+                </div>
+            </div>
+            <div class="demo-items">
+                <div class="demo-row">
+                    <div class="qty">2</div>
+                    <div class="name">Coca-Cola 600ml</div>
+                    <div class="price">$36.00</div>
+                </div>
+                <div class="demo-row">
+                    <div class="qty">1</div>
+                    <div class="name">Pan Bimbo Grande</div>
+                    <div class="price">$45.00</div>
+                </div>
+                <div class="demo-row">
+                    <div class="qty">3</div>
+                    <div class="name">Jugo Del Valle 1L</div>
+                    <div class="price">$90.00</div>
+                </div>
+                <div class="demo-row">
+                    <div class="qty">1</div>
+                    <div class="name">Jabón Zote</div>
+                    <div class="price">$22.00</div>
+                </div>
+                <div class="demo-total">
+                    <span>TOTAL</span>
+                    <span>$181.00</span>
+                </div>
+                <div class="demo-total" style="background:#f0fdf4;border-top:1px solid #dcfce7;">
+                    <span style="font-size:16px;font-weight:500;color:#16a34a;">Paga con $200 &nbsp;→&nbsp; Cambio</span>
+                    <span style="color:#16a34a;">$19.00</span>
+                </div>
+            </div>
+        </div>
+        <p class="anim" style="margin-top:20px;color:var(--gray-600);font-size:15px;">CAJAGO hace todo el cálculo en segundos &mdash; sin sumar a mano, sin errores.</p>
+    </div>
+</div>
+
+<!-- ===== SLIDE 8: DISPOSITIVOS ===== -->
+<div class="slide slide-devices" data-slide="8">
+    <div class="slide-content">
+        <h2 class="slide-title anim">Funciona donde tú quieras</h2>
+        <p class="slide-subtitle anim">Tu tienda, tu dispositivo, tu forma de trabajar</p>
+        <div class="devices-visual anim">
+            <div class="device">
+                <div class="emoji">📱</div>
+                <div class="label">Celular</div>
+            </div>
+            <div class="device">
+                <div class="emoji">�️</div>
+                <div class="label">Tablet</div>
+            </div>
+            <div class="device">
+                <div class="emoji">💻</div>
+                <div class="label">Laptop</div>
+            </div>
+            <div class="device">
+                <div class="emoji">🖥️</div>
+                <div class="label">Escritorio</div>
+            </div>
+        </div>
+        <div class="devices-msg anim">
+            <div class="icon">📷</div>
+            <p>Además puedes escanear códigos de barras con la cámara del celular o tablet. <strong>No necesitas comprar ningún equipo extra.</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 9: VENTAJAS ===== -->
+<div class="slide slide-benefits" data-slide="9">
+    <div class="slide-content">
+        <h2 class="slide-title anim">¿Por qué elegir CAJAGO?</h2>
+        <p class="slide-subtitle anim">Beneficios reales para tu tienda de abarrotes</p>
+        <div class="benefits-grid">
+            <div class="benefit-card anim">
+                <div class="icon">⏱️</div>
+                <div>
+                    <h3>Cobra más rápido</h3>
+                    <p>Escanea y suma en segundos. Los clientes no esperan.</p>
+                </div>
+            </div>
+            <div class="benefit-card anim">
+                <div class="icon">🎯</div>
+                <div>
+                    <h3>Sin errores de cálculo</h3>
+                    <p>El sistema suma todo y calcula el cambio exacto siempre.</p>
+                </div>
+            </div>
+            <div class="benefit-card anim">
+                <div class="icon">📦</div>
+                <div>
+                    <h3>Nunca te quedas sin mercancía</h3>
+                    <p>Te avisa cuando un producto está por agotarse.</p>
+                </div>
+            </div>
+            <div class="benefit-card anim">
+                <div class="icon">📈</div>
+                <div>
+                    <h3>Conoce tus ganancias</h3>
+                    <p>Ve cuánto vendiste cada día y cuáles son tus productos estrella.</p>
+                </div>
+            </div>
+            <div class="benefit-card anim">
+                <div class="icon">📶</div>
+                <div>
+                    <h3>Funciona sin internet</h3>
+                    <p>No dependes de una conexión. Tus datos están seguros.</p>
+                </div>
+            </div>
+            <div class="benefit-card anim">
+                <div class="icon">😊</div>
+                <div>
+                    <h3>Fácil de usar</h3>
+                    <p>Diseñado para que cualquiera lo aprenda en minutos, sin conocimientos de computación.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SLIDE 10: CIERRE ===== -->
+<div class="slide slide-close" data-slide="10">
+    <div class="slide-content">
+        <div class="logo-big anim"><img src="img/isopologo.png" alt="CAJAGO"></div>
+        <h2 class="anim">CAJAGO</h2>
+        <p class="tagline anim">El control de tu tienda en la palma de tu mano.<br>Simple, rápido y sin complicaciones.</p>
+        <div class="contact anim">
+            <div class="contact-card">
+                <span class="icon">📞</span>
+                <span>Contáctanos</span>
+            </div>
+            <div class="contact-card">
+                <span class="icon">🚀</span>
+                <span>Empieza hoy mismo</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script>
+let currentSlide = 1;
+const totalSlides = 10;
+
+function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    const slide = document.querySelector(`.slide[data-slide="${n}"]`);
+    if (slide) slide.classList.add('active');
+
+    currentSlide = n;
+    document.getElementById('slide-num').textContent = n + ' / ' + totalSlides;
+    document.getElementById('counter').textContent = n + ' / ' + totalSlides;
+    document.getElementById('progress').style.width = (n / totalSlides * 100) + '%';
+}
+
+function nextSlide() {
+    if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+    if (currentSlide > 1) showSlide(currentSlide - 1);
+}
+
+// Navegación con teclado
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+    } else if (e.key === 'Home') {
+        e.preventDefault();
+        showSlide(1);
+    } else if (e.key === 'End') {
+        e.preventDefault();
+        showSlide(totalSlides);
+    }
+});
+
+// Navegación con clic (click derecho = atrás, click izquierdo = adelante)
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.nav-btn') || e.target.closest('.top-bar') || e.target.closest('.bottom-bar')) return;
+    nextSlide();
+});
+
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    prevSlide();
+});
+</script>
+
+</body>
+</html>

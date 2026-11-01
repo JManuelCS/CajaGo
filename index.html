@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de punto de venta para tiendas de abarrotes">
+    <title>CAJAGO - Sistema de Cobro</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Librería para escanear códigos de barras con la cámara -->
+    <script src="https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Pantalla de carga -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="img/isopologo.png" alt="CAJAGO">
+            </div>
+            <h1>CAJAGO</h1>
+            <p>Cargando sistema...</p>
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <!-- Aplicación principal -->
+    <div id="app" class="app hidden">
+        <!-- Barra de navegación lateral -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="img/isopologo.png" alt="CAJAGO" class="sidebar-logo-img">
+                <h2 class="sidebar-title">CAJAGO</h2>
+            </div>
+            <ul class="nav-list">
+                <li>
+                    <button class="nav-item active" data-view="dashboard">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Panel</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item" data-view="pos">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Cobrar</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item" data-view="inventory">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Productos</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item" data-view="sales">
+                        <span class="nav-icon">🧾</span>
+                        <span class="nav-label">Ventas</span>
+                    </button>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <p class="version-tag">CAJAGO v1.0</p>
+            </div>
+        </nav>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- ========== PANEL DE CONTROL ========== -->
+            <section id="view-dashboard" class="view active">
+                <header class="view-header">
+                    <h1>Panel de Control</h1>
+                    <p class="view-subtitle">Resumen general de tu tienda</p>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card stat-sales">
+                        <span class="stat-icon">💰</span>
+                        <div class="stat-info">
+                            <p class="stat-label">Ventas de hoy</p>
+                            <p class="stat-value" id="stat-today">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-products">
+                        <span class="stat-icon">📦</span>
+                        <div class="stat-info">
+                            <p class="stat-label">Productos</p>
+                            <p class="stat-value" id="stat-products">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-transactions">
+                        <span class="stat-icon">🧾</span>
+                        <div class="stat-info">
+                            <p class="stat-label">Transacciones hoy</p>
+                            <p class="stat-value" id="stat-transactions">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-lowstock">
+                        <span class="stat-icon">⚠️</span>
+                        <div class="stat-info">
+                            <p class="stat-label">Inventario bajo</p>
+                            <p class="stat-value" id="stat-lowstock">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row">
+                    <div class="card">
+                        <h2 class="card-title">Productos con inventario bajo</h2>
+                        <div id="lowstock-list" class="list-container">
+                            <p class="empty-state">No hay alertas. Todo el inventario está en buen nivel.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">Productos más vendidos</h2>
+                        <div id="top-products" class="list-container">
+                            <p class="empty-state">Aún no hay ventas registradas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Ventas de la última semana</h2>
+                    <div id="weekly-chart" class="chart-container">
+                        <p class="empty-state">Aún no hay datos suficientes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== PUNTO DE VENTA ========== -->
+            <section id="view-pos" class="view">
+                <header class="view-header">
+                    <h1>Punto de Venta</h1>
+                    <p class="view-subtitle">Escanea o busca productos para cobrar</p>
+                </header>
+
+                <div class="pos-layout">
+                    <!-- Columna izquierda: búsqueda y carrito -->
+                    <div class="pos-left">
+                        <div class="pos-search-bar">
+                            <input type="text" id="pos-search" class="pos-search-input"
+                                   placeholder="Escanea el código o escribe el nombre del producto..."
+                                   autocomplete="off">
+                            <button class="btn btn-scan" id="btn-camera-scan" title="Escanear con cámara">
+                                <span>📷</span> Cámara
+                            </button>
+                        </div>
+
+                        <!-- Resultados de búsqueda -->
+                        <div id="pos-results" class="pos-results hidden"></div>
+
+                        <!-- Carrito de compra -->
+                        <div class="cart-section">
+                            <div class="cart-header">
+                                <h2>Carrito</h2>
+                                <button class="btn btn-text-danger" id="btn-clear-cart">Vaciar</button>
+                            </div>
+                            <div id="cart-items" class="cart-items">
+                                <p class="empty-state">El carrito está vacío. Escanea o busca productos para empezar.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha: total y cobro -->
+                    <div class="pos-right">
+                        <div class="checkout-card">
+                            <h2 class="checkout-title">Total a pagar</h2>
+                            <p class="checkout-total" id="checkout-total">$0.00</p>
+                            <div class="checkout-detail">
+                                <div class="checkout-row">
+                                    <span>Artículos:</span>
+                                    <span id="checkout-count">0</span>
+                                </div>
+                                <div class="checkout-row">
+                                    <span>Subtotal:</span>
+                                    <span id="checkout-subtotal">$0.00</span>
+                                </div>
+                            </div>
+
+                            <div class="payment-section">
+                                <label for="payment-received" class="payment-label">Efectivo recibido</label>
+                                <div class="payment-input-row">
+                                    <span class="currency-symbol">$</span>
+                                    <input type="number" id="payment-received" class="payment-input"
+                                           placeholder="0.00" min="0" step="0.01">
+                                </div>
+                                <div class="quick-cash">
+                                    <button class="btn btn-cash" data-cash="50">$50</button>
+                                    <button class="btn btn-cash" data-cash="100">$100</button>
+                                    <button class="btn btn-cash" data-cash="200">$200</button>
+                                    <button class="btn btn-cash" data-cash="500">$500</button>
+                                    <button class="btn btn-cash" id="btn-exact">Exacto</button>
+                                </div>
+                                <div class="change-display">
+                                    <span>Cambio:</span>
+                                    <span class="change-value" id="change-value">$0.00</span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-large" id="btn-checkout" disabled>
+                                💵 Cobrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de venta completada -->
+                <div id="sale-modal" class="modal hidden">
+                    <div class="modal-content modal-success">
+                        <div class="success-icon">✅</div>
+                        <h2>¡Venta completada!</h2>
+                        <div class="receipt" id="receipt"></div>
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" id="btn-print-receipt">🖨️ Imprimir</button>
+                            <button class="btn btn-primary" id="btn-close-sale-modal">Nueva venta</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== INVENTARIO ========== -->
+            <section id="view-inventory" class="view">
+                <header class="view-header">
+                    <h1>Inventario de Productos</h1>
+                    <div class="view-actions">
+                        <input type="text" id="inventory-search" class="search-input"
+                               placeholder="Buscar producto...">
+                        <button class="btn btn-primary" id="btn-add-product">＋ Nuevo producto</button>
+                    </div>
+                </header>
+
+                <div class="table-container">
+                    <table class="data-table" id="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Código de barras</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-body"></tbody>
+                    </table>
+                    <p class="empty-state table-empty hidden" id="inventory-empty">No hay productos registrados. Agrega tu primer producto.</p>
+                </div>
+            </section>
+
+            <!-- ========== HISTORIAL DE VENTAS ========== -->
+            <section id="view-sales" class="view">
+                <header class="view-header">
+                    <h1>Historial de Ventas</h1>
+                    <div class="view-actions">
+                        <input type="date" id="sales-date-filter" class="date-input">
+                        <button class="btn btn-secondary" id="btn-clear-date-filter">Todas</button>
+                    </div>
+                </header>
+
+                <div class="table-container">
+                    <table class="data-table" id="sales-table">
+                        <thead>
+                            <tr>
+                                <th>Folio</th>
+                                <th>Fecha y hora</th>
+                                <th>Artículos</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-body"></tbody>
+                    </table>
+                    <p class="empty-state table-empty hidden" id="sales-empty">No hay ventas registradas todavía.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- ========== MODAL DE PRODUCTO ========== -->
+        <div id="product-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="product-modal-title">Nuevo producto</h2>
+                    <button class="btn btn-icon" id="btn-close-product-modal">✕</button>
+                </div>
+                <form id="product-form" class="product-form">
+                    <input type="hidden" id="product-id">
+                    <div class="form-group">
+                        <label for="product-barcode">Código de barras</label>
+                        <div class="barcode-input-row">
+                            <input type="text" id="product-barcode" placeholder="Escanea o escribe el código">
+                            <button type="button" class="btn btn-secondary btn-small" id="btn-scan-barcode">📷</button>
+                        </div>
+                        <p class="form-hint">Si el producto no tiene código, deja el campo vacío y se generará uno automático.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-name">Nombre del producto *</label>
+                        <input type="text" id="product-name" required placeholder="Ej: Coca-Cola 600ml">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-category">Categoría</label>
+                            <select id="product-category">
+                                <option value="General">General</option>
+                                <option value="Bebidas">Bebidas</option>
+                                <option value="Abarrotes">Abarrotes</option>
+                                <option value="Lácteos">Lácteos</option>
+                                <option value="Botanas">Botanas</option>
+                                <option value="Limpieza">Limpieza</option>
+                                <option value="Cuidado personal">Cuidado personal</option>
+                                <option value="Frutas y verduras">Frutas y verduras</option>
+                                <option value="Panadería">Panadería</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-stock">Existencias</label>
+                            <input type="number" id="product-stock" placeholder="0" min="0" step="1" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Precio de venta ($) *</label>
+                        <input type="number" id="product-price" required placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-cost">Costo de compra ($)</label>
+                        <input type="number" id="product-cost" placeholder="0.00" min="0" step="0.01">
+                        <p class="form-hint">Opcional: ayuda a calcular tu ganancia.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-cancel-product">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar producto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========== MODAL DE DETALLE DE VENTA ========== -->
+        <div id="sale-detail-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Detalle de venta</h2>
+                    <button class="btn btn-icon" id="btn-close-sale-detail">✕</button>
+                </div>
+                <div id="sale-detail-content"></div>
+            </div>
+        </div>
+
+        <!-- ========== MODAL DE ESCANEO CON CÁMARA ========== -->
+        <div id="camera-modal" class="modal hidden">
+            <div class="modal-content modal-camera">
+                <div class="modal-header">
+                    <h2>Escanear código de barras</h2>
+                    <button class="btn btn-icon" id="btn-close-camera">✕</button>
+                </div>
+                <div class="camera-container">
+                    <video id="camera-video"></video>
+                    <div class="camera-overlay">
+                        <div class="scan-frame"></div>
+                    </div>
+                </div>
+                <p class="camera-hint">Enfoca el código de barras dentro del recuadro</p>
+            </div>
+        </div>
+
+        <!-- ========== TOAST DE NOTIFICACIONES ========== -->
+        <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <!-- Scripts de la aplicación -->
+    <script src="js/utils.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/barcode.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/pos.js"></script>
+    <script src="js/sales.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

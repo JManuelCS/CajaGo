@@ -177,22 +177,38 @@
                             </div>
 
                             <div class="payment-section">
-                                <label for="payment-received" class="payment-label">Efectivo recibido</label>
-                                <div class="payment-input-row">
-                                    <span class="currency-symbol">$</span>
-                                    <input type="number" id="payment-received" class="payment-input"
-                                           placeholder="0.00" min="0" step="0.01">
+                                <!-- Selector de método de pago -->
+                                <div class="payment-method">
+                                    <label class="payment-label">Método de pago</label>
+                                    <div class="payment-method-btns">
+                                        <button class="btn btn-method active" id="btn-pay-cash" onclick="POS.setPaymentMethod('cash')">
+                                            💵 Efectivo
+                                        </button>
+                                        <button class="btn btn-method" id="btn-pay-card" onclick="POS.setPaymentMethod('card')">
+                                            💳 Tarjeta
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="quick-cash">
-                                    <button class="btn btn-cash" data-cash="50">$50</button>
-                                    <button class="btn btn-cash" data-cash="100">$100</button>
-                                    <button class="btn btn-cash" data-cash="200">$200</button>
-                                    <button class="btn btn-cash" data-cash="500">$500</button>
-                                    <button class="btn btn-cash" id="btn-exact">Exacto</button>
-                                </div>
-                                <div class="change-display">
-                                    <span>Cambio:</span>
-                                    <span class="change-value" id="change-value">$0.00</span>
+
+                                <!-- Sección efectivo (se oculta con tarjeta) -->
+                                <div id="cash-section">
+                                    <label for="payment-received" class="payment-label">Efectivo recibido</label>
+                                    <div class="payment-input-row">
+                                        <span class="currency-symbol">$</span>
+                                        <input type="number" id="payment-received" class="payment-input"
+                                               placeholder="0.00" min="0" step="0.01">
+                                    </div>
+                                    <div class="quick-cash">
+                                        <button class="btn btn-cash" data-cash="50">$50</button>
+                                        <button class="btn btn-cash" data-cash="100">$100</button>
+                                        <button class="btn btn-cash" data-cash="200">$200</button>
+                                        <button class="btn btn-cash" data-cash="500">$500</button>
+                                        <button class="btn btn-cash" id="btn-exact">Exacto</button>
+                                    </div>
+                                    <div class="change-display">
+                                        <span>Cambio:</span>
+                                        <span class="change-value" id="change-value">$0.00</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -312,12 +328,27 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="product-stock">Existencias</label>
-                            <input type="number" id="product-stock" placeholder="0" min="0" step="1" value="0">
+                            <label for="product-stock" id="stock-label">Existencias</label>
+                            <input type="number" id="product-stock" placeholder="0" min="0" step="0.001" value="0">
                         </div>
                     </div>
+                    <!-- Venta por peso -->
                     <div class="form-group">
-                        <label for="product-price">Precio de venta ($) *</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="product-sold-by-weight">
+                            <span>Este producto se vende por peso</span>
+                        </label>
+                    </div>
+                    <div class="form-group hidden" id="weight-unit-section">
+                        <label for="product-unit">Unidad de medida</label>
+                        <select id="product-unit">
+                            <option value="kg">Kilogramos (kg) — precio por kg</option>
+                            <option value="g">Gramos (g) — el cliente pide en gramos, precio por kg</option>
+                        </select>
+                        <p class="form-hint">Si el cliente pide "500 gramos", elige <strong>Gramos</strong>. El precio siempre es por kilogramo.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price" id="price-label">Precio de venta ($) *</label>
                         <input type="number" id="product-price" required placeholder="0.00" min="0" step="0.01">
                     </div>
                     <div class="form-group">
@@ -363,6 +394,28 @@
 
         <!-- ========== TOAST DE NOTIFICACIONES ========== -->
         <div id="toast" class="toast hidden"></div>
+
+        <!-- ========== MODAL DE CAPTURA DE PESO ========== -->
+        <div id="weight-modal" class="modal hidden">
+            <div class="modal-content modal-weight">
+                <div class="modal-header">
+                    <h2>⚖️ Capturar peso</h2>
+                </div>
+                <div class="weight-modal-body">
+                    <p class="weight-product-name" id="weight-modal-title"></p>
+                    <p class="weight-price-hint" id="weight-price-hint"></p>
+                    <div class="weight-input-row">
+                        <input type="number" id="weight-input" class="weight-input"
+                               placeholder="0.000" min="0.001" step="0.001" inputmode="decimal">
+                        <span class="weight-unit-badge" id="weight-unit-label">kg</span>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="btn-cancel-weight">Cancelar</button>
+                    <button class="btn btn-primary" id="btn-confirm-weight">✅ Agregar al carrito</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase SDK (compat v9 - funciona sin npm ni bundler) -->

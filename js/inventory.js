@@ -47,6 +47,11 @@ const Inventory = {
         document.getElementById('btn-scan-barcode').addEventListener('click', () => {
             BarcodeUI.openForForm();
         });
+
+        // Mostrar/ocultar campos de peso al cambiar el checkbox
+        document.getElementById('product-sold-by-weight').addEventListener('change', () => {
+            this._toggleWeightFields();
+        });
     },
 
     /**
@@ -99,15 +104,24 @@ const Inventory = {
 
         tbody.innerHTML = this.filteredProducts.map(p => {
             const status = Utils.getStockStatus(p.stock);
+            const stockLabel = p.soldByWeight
+                ? `${p.stock} ${p.unit || 'kg'}`
+                : `${p.stock} pza`;
+            const priceLabel = p.soldByWeight
+                ? `${Utils.formatCurrency(p.price)}/kg`
+                : Utils.formatCurrency(p.price);
             return `
                 <tr>
                     <td><code>${Utils.escapeHtml(p.barcode || '—')}</code></td>
-                    <td>${Utils.escapeHtml(p.name)}</td>
+                    <td>
+                        ${Utils.escapeHtml(p.name)}
+                        ${p.soldByWeight ? '<span class="badge badge-weight">⚖️ Peso</span>' : ''}
+                    </td>
                     <td><span class="badge badge-success">${Utils.escapeHtml(p.category || 'General')}</span></td>
-                    <td><strong>${Utils.formatCurrency(p.price)}</strong></td>
+                    <td><strong>${priceLabel}</strong></td>
                     <td>
                         <span class="stock-cell ${status.class}">
-                            ${p.stock}
+                            ${stockLabel}
                         </span>
                     </td>
                     <td>
@@ -138,13 +152,39 @@ const Inventory = {
             document.getElementById('product-stock').value = product.stock || 0;
             document.getElementById('product-price').value = product.price || '';
             document.getElementById('product-cost').value = product.cost || '';
+            document.getElementById('product-sold-by-weight').checked = !!product.soldByWeight;
+            document.getElementById('product-unit').value = product.unit || 'kg';
         } else {
             title.textContent = 'Nuevo producto';
             document.getElementById('product-form').reset();
             document.getElementById('product-id').value = '';
+            document.getElementById('product-sold-by-weight').checked = false;
+            document.getElementById('product-unit').value = 'kg';
         }
 
+        // Mostrar/ocultar selector de unidad según el checkbox
+        this._toggleWeightFields();
         modal.classList.remove('hidden');
+    },
+
+    /**
+     * Muestra u oculta la sección de unidad de peso según el checkbox.
+     */
+    _toggleWeightFields() {
+        const soldByWeight = document.getElementById('product-sold-by-weight').checked;
+        const weightSection = document.getElementById('weight-unit-section');
+        const stockLabel = document.getElementById('stock-label');
+        const priceLabel = document.getElementById('price-label');
+
+        if (soldByWeight) {
+            weightSection.classList.remove('hidden');
+            stockLabel.textContent = 'Existencias (en la unidad seleccionada)';
+            priceLabel.textContent = 'Precio de venta por kg ($) *';
+        } else {
+            weightSection.classList.add('hidden');
+            stockLabel.textContent = 'Existencias';
+            priceLabel.textContent = 'Precio de venta ($) *';
+        }
     },
 
     /**
@@ -161,7 +201,14 @@ const Inventory = {
         const id = document.getElementById('product-id').value;
         const name = document.getElementById('product-name').value.trim();
         const price = parseFloat(document.getElementById('product-price').value);
-        const stock = parseInt(document.getElementById('product-stock').value) || 0;
+        const soldByWeight = document.getElementById('product-sold-by-weight').checked;
+        const unit = soldByWeight
+            ? document.getElementById('product-unit').value
+            : 'pza';
+        // Stock: decimal para productos por peso, entero para piezas
+        const stock = soldByWeight
+            ? (parseFloat(document.getElementById('product-stock').value) || 0)
+            : (parseInt(document.getElementById('product-stock').value) || 0);
         const cost = parseFloat(document.getElementById('product-cost').value) || 0;
 
         // Validaciones
@@ -192,11 +239,13 @@ const Inventory = {
             category: document.getElementById('product-category').value,
             price,
             stock,
-            cost
+            cost,
+            soldByWeight,
+            unit
         };
 
         if (id) {
-            product.id = parseInt(id);
+            product.id = id; // Firestore usa strings como ID
             await DB.updateProduct(product);
             Utils.toast('Producto actualizado correctamente', 'success');
         } else {

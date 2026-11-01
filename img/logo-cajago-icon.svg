@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="b" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="s" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#1e40af"/>
+    </linearGradient>
+    <linearGradient id="h" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#93c5fd"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="w" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#bfdbfe"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="sd">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#1e3a8a" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <!-- Sombra base -->
+  <ellipse cx="33" cy="58" rx="16" ry="3" fill="#1e3a8a" fill-opacity="0.3"/>
+  <!-- Cara frontal -->
+  <rect x="14" y="25" width="32" height="23" rx="4" fill="url(#b)" filter="url(#sd)"/>
+  <!-- Cara lateral derecha -->
+  <path d="M46 25 L51 21 L51 45 L46 48 Z" fill="url(#s)"/>
+  <!-- Cara superior -->
+  <path d="M14 25 L19 21 L51 21 L46 25 Z" fill="#93c5fd"/>
+  <!-- Brillo -->
+  <rect x="14" y="25" width="32" height="11" rx="4" fill="url(#shine)"/>
+  <!-- Rejilla frontal -->
+  <line x1="16" y1="32" x2="45" y2="32" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+  <line x1="16" y1="38" x2="45" y2="38" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+  <line x1="23" y1="26" x2="23" y2="47" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="31" y1="26" x2="31" y2="47" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="39" y1="26" x2="39" y2="47" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <!-- Handle -->
+  <rect x="10" y="14" width="35" height="4" rx="2" fill="url(#h)"/>
+  <rect x="10" y="14" width="4"  height="13" rx="2" fill="#3b82f6"/>
+  <rect x="41" y="14" width="4"  height="13" rx="2" fill="url(#h)"/>
+  <!-- Handle 3D right extension -->
+  <path d="M45 14 L50 11 L50 15 L45 18 Z" fill="#1d4ed8"/>
+  <rect x="45" y="11" width="5" height="4" rx="2" fill="url(#h)"/>
+  <!-- Ruedas -->
+  <circle cx="22" cy="52" r="4" fill="url(#w)" filter="url(#sd)"/>
+  <circle cx="22" cy="52" r="2" fill="#1e3a8a"/>
+  <circle cx="40" cy="52" r="4" fill="url(#w)" filter="url(#sd)"/>
+  <circle cx="40" cy="52" r="2" fill="#1e3a8a"/>
+  <!-- Brillo ruedas -->
+  <ellipse cx="21" cy="51" rx="1.2" ry="0.8" fill="white" fill-opacity="0.5"/>
+  <ellipse cx="39" cy="51" rx="1.2" ry="0.8" fill="white" fill-opacity="0.5"/>
+</svg>

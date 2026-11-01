@@ -1,0 +1,10 @@
+CAJAGO — CORRECCIÓN DE NAVEGACIÓN MÓVIL
+
+Se agregó una barra inferior fija en teléfonos para Panel, Cobrar, Productos y Ventas.
+Se mejoró el desplazamiento horizontal de tablas y los espacios inferiores para iPhone.
+No se modificaron los módulos de inventario, cobro, ventas ni base de datos.
+
+PUBLICACIÓN: Reemplaza en tu repositorio CajaGo los archivos de esta carpeta, conservando la misma estructura.
+IMPORTANTE: los datos se guardan localmente en cada navegador/dispositivo. No se sincronizan automáticamente entre computadora y teléfono. Haz respaldo antes de limpiar datos del navegador.
+
+Prueba en iPhone: abrir Panel, Cobrar, Productos y Ventas; comprobar formularios, tablas, cámara y cobro.

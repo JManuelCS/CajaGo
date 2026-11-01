@@ -112,8 +112,8 @@ const Inventory = {
                     </td>
                     <td>
                         <div class="table-actions">
-                            <button class="btn btn-edit" onclick="Inventory.editProduct(${p.id})">✏️ Editar</button>
-                            <button class="btn btn-delete" onclick="Inventory.confirmDelete(${p.id})">🗑️</button>
+                            <button class="btn btn-edit" onclick="Inventory.editProduct('${p.id}')">✏️ Editar</button>
+                            <button class="btn btn-delete" onclick="Inventory.confirmDelete('${p.id}')">🗑️</button>
                         </div>
                     </td>
                 </tr>

@@ -63,14 +63,6 @@
             </div>
         </nav>
 
-        <!-- Navegación inferior para teléfonos -->
-        <nav class="mobile-nav" aria-label="Navegación principal móvil">
-            <button type="button" class="nav-item active" data-view="dashboard" aria-label="Panel de control"><span class="nav-icon" aria-hidden="true">📊</span><span class="nav-label">Panel</span></button>
-            <button type="button" class="nav-item" data-view="pos" aria-label="Cobrar"><span class="nav-icon" aria-hidden="true">🛍️</span><span class="nav-label">Cobrar</span></button>
-            <button type="button" class="nav-item" data-view="inventory" aria-label="Productos"><span class="nav-icon" aria-hidden="true">📦</span><span class="nav-label">Productos</span></button>
-            <button type="button" class="nav-item" data-view="sales" aria-label="Ventas"><span class="nav-icon" aria-hidden="true">🧾</span><span class="nav-label">Ventas</span></button>
-        </nav>
-
         <!-- Contenido principal -->
         <main class="main-content">
             <!-- ========== PANEL DE CONTROL ========== -->
@@ -372,6 +364,22 @@
         <!-- ========== TOAST DE NOTIFICACIONES ========== -->
         <div id="toast" class="toast hidden"></div>
     </div>
+
+    <!-- Firebase SDK (compat v9 - funciona sin npm ni bundler) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script>
+        // Configuración de Firebase - proyecto CajaGo
+        const firebaseConfig = {
+            apiKey:            "AIzaSyCz0bkZm0agq4lFEhxu2U9SAnRSSeI4a4g",
+            authDomain:        "cajago-115dc.firebaseapp.com",
+            projectId:         "cajago-115dc",
+            storageBucket:     "cajago-115dc.firebasestorage.app",
+            messagingSenderId: "539871711606",
+            appId:             "1:539871711606:web:6106024d807cb88cb2aa57"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
 
     <!-- Scripts de la aplicación -->
     <script src="js/utils.js"></script>

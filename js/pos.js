@@ -302,13 +302,13 @@ const POS = {
                     <div class="cart-item-price">${Utils.formatCurrency(item.price)} c/u</div>
                 </div>
                 <div class="cart-quantity">
-                    <button class="qty-btn" onclick="POS.changeQuantity(${item.productId}, -1)">−</button>
+                    <button class="qty-btn" onclick="POS.changeQuantity('${item.productId}', -1)">−</button>
                     <input type="number" class="qty-value" value="${item.quantity}"
-                           onchange="POS.setQuantity(${item.productId}, this.value)" min="1" max="${item.stock}">
-                    <button class="qty-btn" onclick="POS.changeQuantity(${item.productId}, 1)">+</button>
+                           onchange="POS.setQuantity('${item.productId}', this.value)" min="1" max="${item.stock}">
+                    <button class="qty-btn" onclick="POS.changeQuantity('${item.productId}', 1)">+</button>
                 </div>
                 <div class="cart-item-total">${Utils.formatCurrency(item.price * item.quantity)}</div>
-                <button class="cart-remove" onclick="POS.removeFromCart(${item.productId})">✕</button>
+                <button class="cart-remove" onclick="POS.removeFromCart('${item.productId}')">✕</button>
             </div>
         `).join('');
     },

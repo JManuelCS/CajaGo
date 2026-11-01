@@ -87,7 +87,7 @@ const Sales = {
                 <td>${s.itemCount} artículo(s)</td>
                 <td><strong>${Utils.formatCurrency(s.total)}</strong></td>
                 <td>
-                    <button class="btn btn-edit" onclick="Sales.showDetail(${s.id})">👁️ Ver</button>
+                    <button class="btn btn-edit" onclick="Sales.showDetail('${s.id}')">👁️ Ver</button>
                 </td>
             </tr>
         `).join('');

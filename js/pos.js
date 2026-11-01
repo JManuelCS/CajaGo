@@ -117,7 +117,7 @@ const POS = {
             resultsDiv.innerHTML = '<div class="pos-result-item"><div class="pos-result-info"><div class="pos-result-name">Sin resultados</div><div class="pos-result-code">No se encontraron productos</div></div></div>';
         } else {
             resultsDiv.innerHTML = results.map(p => `
-                <div class="pos-result-item" onclick="POS.selectProduct(${p.id})">
+                <div class="pos-result-item" onclick="POS.selectProduct('${p.id}')">
                     <div class="pos-result-icon">📦</div>
                     <div class="pos-result-info">
                         <div class="pos-result-name">${Utils.escapeHtml(p.name)}</div>

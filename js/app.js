@@ -42,25 +42,26 @@ const App = {
     },
 
     /**
-     * Configura la navegación entre vistas.
+     * Configura la navegación entre vistas (sidebar en escritorio + barra inferior en móvil).
      */
     bindNavigation() {
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const view = item.dataset.view;
-                this.navigate(view);
-            });
+        // Sidebar (escritorio)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => this.navigate(item.dataset.view));
+        });
+        // Barra inferior (móvil)
+        document.querySelectorAll('.bottom-nav-item').forEach(item => {
+            item.addEventListener('click', () => this.navigate(item.dataset.view));
         });
     },
 
     /**
      * Navega a una vista específica.
-     * @param {string} view - Nombre de la vista ('dashboard', 'pos', 'inventory', 'sales')
+     * @param {string} view
      */
     navigate(view) {
-        // Actualizar botones de navegación
-        document.querySelectorAll('.nav-item').forEach(item => {
+        // Actualizar botones sidebar y barra inferior
+        document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(item => {
             item.classList.toggle('active', item.dataset.view === view);
         });
 

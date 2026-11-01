@@ -1237,7 +1237,7 @@ body {
 
     /* Sidebar lateral se oculta completamente */
     .sidebar {
-        display: none;
+        display: none !important;
     }
 
     /* El contenido ocupa toda la pantalla */
